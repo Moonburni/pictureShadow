@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link href="css/reset.css" rel="stylesheet" type="text/css">
+    <link href="css/base.css" rel="stylesheet" type="text/css">
+    <link href="css/index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="box1">
+    <h1>展示台</h1>
+    <div id="platform">
+        <div id="imgBox"></div>
+        <div id="btnBox">
+            <div class="uploadImg">
+                <input type="file" accept="image/*" onchange="getPicture(this)"/>
+                <div class="uploadBackground">点击上传照片</div>
+            </div>
+            <div onclick="downloadPicture()" class="baseBtn">下载图片</div>
+        </div>
+    </div>
+</div>
+<div id="box2">
+    <h1>操作台</h1>
+    <div id="selectBox">
+        <label>灰度
+            <input type="range" title="灰度" onchange="changeNum('grey', this)" min="0" max="100" value="0" step="1"/>
+        </label>
+        <label>模糊
+            <input type="range" title="模糊" onchange="changeNum('blur', this)" min="0" max="5" value="0" step="0.05"/>
+        </label>
+        <label>对比度
+            <input type="range" title="对比度" onchange="changeNum('contrast', this)" min="100" max="1000" value="0" step="10"/>
+        </label>
+        <label>色系反转
+            <input type="range" title="色相反转" onchange="changeNum('hue-rotate', this)" min="0" max="180" value="0" step="1"/>
+        </label>
+        <label>反色
+            <input type="range" title="反色" onchange="changeNum('invert', this)" min="0" max="180" value="0" step="1"/>
+        </label>
+        <label>褐色
+            <input type="range" title="褐色" onchange="changeNum('sepia', this)" min="0" max="180" value="0" step="1"/>
+        </label>
+        <label>饱和度
+            <input type="range" title="饱和度" onchange="changeNum('saturate', this)" min="0" max="200" value="0" step="2"/>
+        </label>
+        <label>透明度
+            <input type="range" title="透明度" onchange="changeNum('opacity', this)" min="0" max="100" value="0" step="1"/>
+        </label>
+        <label>亮度
+            <input type="range" title="亮度" onchange="changeNum('brightness', this)" min="0" max="200" value="0" step="2"/>
+        </label>
+    </div>
+</div>
+</body>
+<script>
+    const img_id = 'picture';
+    let img = null;
+    
+    function stringAdd(oldStr, style, value) {
+        if (oldStr) {
+           if (oldStr.indexOf(style) >= 0) {
+               let reg = new RegExp(`(.*${style}[\(])([^\)]*)([\)].*)`);
+               return oldStr.replace(reg,'$1' + value + '$3');
+           } else {
+               return `${oldStr} ${style}(${value})`;
+           }
+        } else {
+            return `${style}(${value})`;
+        }
+    }
+
+    function getPicture(file) {
+        if (file.files && file.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(evt){
+                if (!img) {
+                    let _img = document.createElement('img');
+                    _img.src = evt.target.result;
+                    _img.id = img_id;
+                    img = _img;
+                    document.getElementById('imgBox').appendChild(_img);
+                } else {
+                    img.src = evt.target.result;
+                }
+            };
+            reader.readAsDataURL(file.files[0]);
+        }
+    }
+
+    function clearNum() {
+        [...document.getElementById('selectBox').children]
+            .map(label => label.children)
+            .forEach((input) => {
+            // console.log(input[0].value)
+            input[0].value = '0';
+            img.style.filter = '';
+        })
+    }
+
+    function changeNum(type, e) {
+        if (type === 'grey') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'grayscale', `${e.value}%`);
+        } else if (type === 'blur') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'blur', `${e.value}px`);
+        } else if (type === 'contrast') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'contrast', `${e.value}%`);
+        } else if (type === 'hue-rotate') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'hue-rotate', `${e.value}deg`);
+        } else if (type === 'invert') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'invert', `${e.value}%`);
+        } else if (type === 'sepia') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'sepia', `${e.value}%`);
+        } else if (type === 'saturate') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'saturate', `${e.value}%`);
+        } else if (type === 'opacity') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'opacity', `${e.value}%`);
+        } else if (type === 'brightness') {
+            if (img) img.style.filter = stringAdd(img.style.filter, 'brightness', `${e.value}%`);
+        }
+    }
+
+     function download(url, fullName) {
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.setAttribute('download', fullName);
+        anchor.click();
+    }
+
+    function changeImage(imgNode, format = 'png', quality = 0.97) {
+        const canvas = document.createElement('canvas');
+        canvas.width = imgNode.width;
+        canvas.height = imgNode.height;
+        const context = canvas.getContext('2d');
+        context.filter = getComputedStyle(imgNode).filter;
+        imgNode.setAttribute('crossOrigin', 'anonymous');
+        context.drawImage(imgNode, 0, 0, canvas.width, canvas.height);
+        const url = canvas.toDataURL(`image/${format}`, quality);
+        return {
+            url,
+            then: (cb) => {
+                cb(url)
+            },
+            download: (name = 'image') => {
+                download(url, `${name}.${format}`)
+            }
+        }
+    }
+
+    function downloadPicture() {
+        if (img) {
+            changeImage(img).download();
+        }
+    }
+
+</script>
+</html>

@@ -1,0 +1,103 @@
+label {
+    display: flex;
+    margin: 5px;
+    justify-content: space-between;
+    flex-flow: wrap column;
+    width: 190px;
+    font-size: 14px;
+}
+body {
+    display: flex;
+    flex-flow: nowrap row;
+    justify-content: space-around;
+}
+#box1,#box2 {
+    width: 45vw;
+    height: 100vh;
+    float: left;
+}
+#selectBox {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    box-shadow: #eeeeee 0 5px 10px;
+}
+.uploadImg {
+    position: relative;
+    width: 125px;
+    height: 30px;
+    filter: drop-shadow(0px 0px 1px rgba(0,110,179,1));
+}
+.uploadImg:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+.uploadBackground {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,110,179,1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    color: #eeeeee;
+    font-size: 15px;
+}
+.baseBtn {
+    width: 125px;
+    height: 30px;
+    filter: drop-shadow(0px 0px 1px rgba(0,110,179,1));
+    background: rgba(0,110,179,1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    color: #eeeeee;
+    font-size: 15px;
+}
+.baseBtn:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+#imgBox {
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: #eeeeee 0 5px 10px;
+    overflow: auto;
+}
+#imgBox > img {
+    height: 80%;
+    width: auto;
+    display: block;
+}
+#btnBox {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+#platform {
+    width: 100%;
+    height: 85%;
+    box-shadow: #eeeeee 0 5px 15px;
+}
+h1 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    margin-left: 25px;
+}
+h1::before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    background-color: #b7b4b4;
+    border-radius: 100%;
+    position: absolute;
+    margin-left: -25px;
+    margin-top: 2px;
+}
