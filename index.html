@@ -11,7 +11,9 @@
 <div id="box1">
     <h1>展示台</h1>
     <div id="platform">
-        <div id="imgBox"></div>
+        <div id="imgBox">
+            <canvas id="imgCanvas"></canvas>
+        </div>
         <div id="btnBox">
             <div class="uploadImg">
                 <input type="file" accept="image/*" onchange="getPicture(this)"/>
@@ -24,6 +26,7 @@
 <div id="box2">
     <h1>操作台</h1>
     <div id="selectBox">
+        <h2>基础设置</h2>
         <label>灰度
             <input type="range" title="灰度" onchange="changeNum('grey', this)" min="0" max="100" value="0" step="1"/>
         </label>
@@ -31,10 +34,12 @@
             <input type="range" title="模糊" onchange="changeNum('blur', this)" min="0" max="5" value="0" step="0.05"/>
         </label>
         <label>对比度
-            <input type="range" title="对比度" onchange="changeNum('contrast', this)" min="100" max="1000" value="0" step="10"/>
+            <input type="range" title="对比度" onchange="changeNum('contrast', this)" min="100" max="1000" value="0"
+                   step="10"/>
         </label>
         <label>色系反转
-            <input type="range" title="色相反转" onchange="changeNum('hue-rotate', this)" min="0" max="180" value="0" step="1"/>
+            <input type="range" title="色相反转" onchange="changeNum('hue-rotate', this)" min="0" max="180" value="0"
+                   step="1"/>
         </label>
         <label>反色
             <input type="range" title="反色" onchange="changeNum('invert', this)" min="0" max="180" value="0" step="1"/>
@@ -43,30 +48,45 @@
             <input type="range" title="褐色" onchange="changeNum('sepia', this)" min="0" max="180" value="0" step="1"/>
         </label>
         <label>饱和度
-            <input type="range" title="饱和度" onchange="changeNum('saturate', this)" min="0" max="200" value="0" step="2"/>
+            <input type="range" title="饱和度" onchange="changeNum('saturate', this)" min="0" max="200" value="0"
+                   step="2"/>
         </label>
         <label>透明度
             <input type="range" title="透明度" onchange="changeNum('opacity', this)" min="0" max="100" value="0" step="1"/>
         </label>
         <label>亮度
-            <input type="range" title="亮度" onchange="changeNum('brightness', this)" min="0" max="200" value="0" step="2"/>
+            <input type="range" title="亮度" onchange="changeNum('brightness', this)" min="0" max="200" value="0"
+                   step="2"/>
         </label>
+        <h2>其他</h2>
         <div onclick="clearNum()" class="baseBtn">重置</div>
+        <div onclick="testSome()" class="baseBtn">test</div>
     </div>
 </div>
 </body>
 <script>
     const img_id = 'picture';
     let img = null;
-    
+    let canvasImg = document.getElementById('imgCanvas');
+
+    function testSome() {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        let data = context.getImageData(0, 0, 5, 5);
+        console.log(data.data);
+    }
+
     function stringAdd(oldStr, style, value) {
         if (oldStr) {
-           if (oldStr.indexOf(style) >= 0) {
-               let reg = new RegExp(`(.*${style}[\(])([^\)]*)([\)].*)`);
-               return oldStr.replace(reg,'$1' + value + '$3');
-           } else {
-               return `${oldStr} ${style}(${value})`;
-           }
+            if (oldStr.indexOf(style) >= 0) {
+                let reg = new RegExp(`(.*${style}[\(])([^\)]*)([\)].*)`);
+                return oldStr.replace(reg, '$1' + value + '$3');
+            } else {
+                return `${oldStr} ${style}(${value})`;
+            }
         } else {
             return `${style}(${value})`;
         }
@@ -75,13 +95,25 @@
     function getPicture(file) {
         if (file.files && file.files[0]) {
             let reader = new FileReader();
-            reader.onload = function(evt){
+            reader.onload = function (evt) {
                 if (!img) {
-                    let _img = document.createElement('img');
+                    let imgBox = document.getElementById('imgBox');
+                    let _img = new Image();
+                    _img.onload = function() {
+                        _img.id = img_id;
+                        img = _img;
+                        const content = canvasImg.getContext('2d');
+                        let rate = _img.width/_img.height;
+                        if (rate <= 1) {
+                            canvasImg.height = parseInt(getComputedStyle(imgBox).height)*0.8;
+                            canvasImg.width = parseInt(getComputedStyle(imgBox).height)*0.8*rate;
+                        } else {
+                            canvasImg.width = parseInt(getComputedStyle(imgBox).width)*0.8;
+                            canvasImg.height = parseInt(getComputedStyle(imgBox).width)*0.8/rate;
+                        }
+                        content.drawImage(_img, 0, 0, canvasImg.width, canvasImg.height);
+                    };
                     _img.src = evt.target.result;
-                    _img.id = img_id;
-                    img = _img;
-                    document.getElementById('imgBox').appendChild(_img);
                 } else {
                     img.src = evt.target.result;
                 }
@@ -94,49 +126,50 @@
         [...document.getElementById('selectBox').children]
             .map(label => label.children)
             .forEach((input) => {
-            // console.log(input[0].value)
-            input[0].value = '0';
-            img.style.filter = '';
-        })
+                if (input[0]) input[0].value = '0';
+                if (img) canvasImg.style.filter = '';
+            })
     }
 
     function changeNum(type, e) {
         if (type === 'grey') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'grayscale', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'grayscale', `${e.value}%`);
         } else if (type === 'blur') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'blur', `${e.value}px`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'blur', `${e.value}px`);
         } else if (type === 'contrast') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'contrast', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'contrast', `${e.value}%`);
         } else if (type === 'hue-rotate') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'hue-rotate', `${e.value}deg`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'hue-rotate', `${e.value}deg`);
         } else if (type === 'invert') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'invert', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'invert', `${e.value}%`);
         } else if (type === 'sepia') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'sepia', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'sepia', `${e.value}%`);
         } else if (type === 'saturate') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'saturate', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'saturate', `${e.value}%`);
         } else if (type === 'opacity') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'opacity', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'opacity', `${e.value}%`);
         } else if (type === 'brightness') {
-            if (img) img.style.filter = stringAdd(img.style.filter, 'brightness', `${e.value}%`);
+            if (img) canvasImg.style.filter = stringAdd(canvasImg.style.filter, 'brightness', `${e.value}%`);
         }
     }
 
-     function download(url, fullName) {
+
+
+    function download(url, fullName) {
         const anchor = document.createElement('a');
         anchor.href = url;
         anchor.setAttribute('download', fullName);
         anchor.click();
     }
 
-    function changeImage(imgNode, format = 'png', quality = 0.97) {
+    function changeImage(canvasImg, img, format = 'png', quality = 0.97) {
         const canvas = document.createElement('canvas');
-        canvas.width = imgNode.width;
-        canvas.height = imgNode.height;
+        canvas.width = canvasImg.width;
+        canvas.height = canvasImg.height;
         const context = canvas.getContext('2d');
-        context.filter = getComputedStyle(imgNode).filter;
-        imgNode.setAttribute('crossOrigin', 'anonymous');
-        context.drawImage(imgNode, 0, 0, canvas.width, canvas.height);
+        context.filter = getComputedStyle(canvasImg).filter;
+        img.setAttribute('crossOrigin', 'anonymous');
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
         const url = canvas.toDataURL(`image/${format}`, quality);
         return {
             url,
@@ -151,7 +184,7 @@
 
     function downloadPicture() {
         if (img) {
-            changeImage(img).download();
+            changeImage(canvasImg, img).download()
         }
     }
 

@@ -18,15 +18,18 @@ body {
 }
 #selectBox {
     width: 100%;
+    height: auto;
     display: flex;
     flex-flow: row wrap;
     box-shadow: #eeeeee 0 5px 10px;
+    max-height: 85%;
+    overflow: auto;
 }
 .uploadImg {
     position: relative;
     width: 125px;
     height: 30px;
-    filter: drop-shadow(0px 0px 1px rgba(0,110,179,1));
+    filter: drop-shadow(0px 0px 2px rgba(0,110,179,1));
 }
 .uploadImg:hover {
     opacity: 0.8;
@@ -46,7 +49,7 @@ body {
 .baseBtn {
     width: 125px;
     height: 30px;
-    filter: drop-shadow(0px 0px 1px rgba(0,110,179,1));
+    filter: drop-shadow(0px 0px 2px rgba(0,110,179,1));
     background: rgba(0,110,179,1);
     display: flex;
     justify-content: center;
@@ -54,6 +57,7 @@ body {
     border-radius: 4px;
     color: #eeeeee;
     font-size: 15px;
+    margin: 5px;
 }
 .baseBtn:hover {
     opacity: 0.8;
@@ -67,11 +71,6 @@ body {
     align-items: center;
     box-shadow: #eeeeee 0 5px 10px;
     overflow: auto;
-}
-#imgBox > img {
-    height: 80%;
-    width: auto;
-    display: block;
 }
 #btnBox {
     width: 100%;
@@ -90,6 +89,7 @@ h1 {
     margin-bottom: 15px;
     font-size: 18px;
     margin-left: 25px;
+    position: relative;
 }
 h1::before {
     content: '';
@@ -99,5 +99,23 @@ h1::before {
     border-radius: 100%;
     position: absolute;
     margin-left: -25px;
+    margin-top: 2px;
+}
+h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    margin-left: 25px;
+    width: 100%;
+    position: relative;
+}
+h2::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: #b7b4b4;
+    border-radius: 100%;
+    position: absolute;
+    margin-left: -19px;
     margin-top: 2px;
 }
