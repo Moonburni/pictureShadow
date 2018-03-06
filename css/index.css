@@ -119,3 +119,6 @@ h2::before {
     margin-left: -19px;
     margin-top: 2px;
 }
+#cut {
+    position: absolute;
+}

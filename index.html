@@ -60,7 +60,7 @@
         </label>
         <h2>其他</h2>
         <div onclick="clearNum()" class="baseBtn">重置</div>
-        <div onclick="testSome()" class="baseBtn">test</div>
+        <div onclick="cutImg()" class="baseBtn">剪裁</div>
     </div>
 </div>
 </body>
@@ -69,14 +69,64 @@
     let img = null;
     let canvasImg = document.getElementById('imgCanvas');
 
-    function testSome() {
+    let cutImg = (function () {
+        let canvas = null;
+        return () => {
+            if (canvas || !img) return;
+            canvas = createCanvas(canvasImg, 'cut');
+            document.getElementById('imgBox').appendChild(canvas)
+        }
+    })();
+
+    function createCanvas(img, id) {
+
+        function getArea(content, obj) {
+            content.clearRect(0, 0, canvas.width, canvas.height);
+            content.fillStyle='rgba(0,0,0,0.6)';
+            content.fillRect(0, 0, canvas.width, canvas.height);
+            content.clearRect(obj.x, obj.y, obj.p, obj.q)
+        }
+        
+        function judgePosition(x, y, area) {
+            return (area.x <= x && x <= area.p + area.x && area.y <= y && y <= area.q + area.y);
+        }
+        
+        let cutArea = {
+            x: img.width*0.25,
+            y: img.height*0.25,
+            p: img.width*0.5,
+            q: img.height*0.5
+        };
+
+        let canvasStatus = {
+            canMove: false
+        };
+
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
+        if (id) canvas.id = id;
         const context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
-        let data = context.getImageData(0, 0, 5, 5);
-        console.log(data.data);
+        getArea(context, cutArea);
+        canvas.addEventListener('mousedown', function (event) {
+            canvasStatus.canMove = !!judgePosition(event.offsetX, event.offsetY, cutArea);
+        });
+        canvas.addEventListener('mouseup', function () {
+            canvasStatus.canMove = false;
+        });
+        canvas.addEventListener('mousemove', function (event) {
+            if (judgePosition(event.offsetX, event.offsetY, cutArea)) {
+                this.style.cursor = 'move';
+            } else {
+                this.style.cursor = 'default';
+            }
+            if (canvasStatus.canMove) {
+                cutArea.x = cutArea.x + event.movementX;
+                cutArea.y = cutArea.y + event.movementY;
+                getArea(context, cutArea);
+            }
+        });
+        return canvas
     }
 
     function stringAdd(oldStr, style, value) {
