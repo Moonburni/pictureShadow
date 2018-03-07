@@ -11,6 +11,7 @@ body {
     flex-flow: nowrap row;
     justify-content: space-around;
     max-width: 1100px;
+    margin: auto
 }
 #box1,#box2 {
     width: 45vw;
