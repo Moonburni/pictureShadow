@@ -10,6 +10,7 @@ body {
     display: flex;
     flex-flow: nowrap row;
     justify-content: space-around;
+    max-width: 1100px;
 }
 #box1,#box2 {
     width: 45vw;
@@ -71,6 +72,7 @@ body {
     align-items: center;
     box-shadow: #eeeeee 0 5px 10px;
     overflow: auto;
+    position: relative;
 }
 #btnBox {
     width: 100%;
@@ -121,4 +123,20 @@ h2::before {
 }
 #cut {
     position: absolute;
+}
+.cutBox {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: flex;
+    flex-flow: nowrap;
+    justify-content: space-around;
+    align-items: center;
+}
+.cutBox > div {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
