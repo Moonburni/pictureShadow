@@ -21,9 +21,6 @@ function download(canvasImg, img, quality = 0.97) {
         const url = canvas.toDataURL(`image/${format}`, quality);
         return {
             url,
-            then: (cb) => {
-                cb(url)
-            },
             download: () => {
                 downloadImg(url, `${name}.${format}`)
             }

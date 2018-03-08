@@ -6,9 +6,9 @@ let canvasImg = document.getElementById('imgCanvas');
 let cutImg = (function () {
     let imgBox = document.getElementById('imgBox');
     let canvas = null;
-    return () => {
+    return (type, obj) => {
         if (canvas || !img) return;
-        let create = createCanvas(canvasImg, 'cut');
+        let create = type === 'cut' ? createCanvas(canvasImg, 'cut') : chartlet(canvasImg, obj, 'cut');
         canvas = create.canvas;
         let confirm = document.createElement('div');
         let cancel = document.createElement('div');
@@ -21,7 +21,11 @@ let cutImg = (function () {
         cutBox.appendChild(confirm);
         cutBox.appendChild(cancel);
         confirm.addEventListener('click',function () {
-            cutImgChange(create.cutArea);
+            if (type === 'cut') {
+                cutImgChange(create.cutArea);
+            } else {
+                addImgChange(create.obj, canvasImg)
+            }
             imgBox.removeChild(canvas);
             imgBox.removeChild(cutBox);
             canvas = null;
@@ -35,6 +39,18 @@ let cutImg = (function () {
         imgBox.appendChild(cutBox);
     }
 })();
+
+function addImgChange(obj, canvas) {
+    let content = canvas.getContext('2d');
+    let objArea = obj.objArea;
+    let text = obj.value;
+    content.font = `${objArea.q*1.3}px serif`;
+    content.rotate(objArea.r* Math.PI / 180);
+    content.fillText(text, objArea.x, objArea.y + objArea.q, objArea.p);
+    content.strokeRect(objArea.x, objArea.y, objArea.p, objArea.q);
+    delAddArr(img_url, img, canvas.toDataURL(`image/png`, 0.97));
+    img.src = img_url[img_url.length - 1];
+}
 
 function cutImgChange(area) {
     let imgBox = document.getElementById('imgBox');
@@ -160,4 +176,8 @@ function go(type) {
             img.src = img_url[img_url.indexOf(img.src) + 1];
         }
     }
+}
+
+function mapImg() {
+    cutImg('map', {text: 'design by moonburn'})
 }
