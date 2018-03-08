@@ -19,6 +19,8 @@
                 <input type="file" accept="image/*" onchange="getPicture(this)"/>
                 <div class="uploadBackground">点击上传照片</div>
             </div>
+            <div onclick="go('back')" class="baseBtn">后退</div>
+            <div onclick="go()" class="baseBtn">前进</div>
             <div onclick="downloadPicture()" class="baseBtn">下载图片</div>
         </div>
     </div>
@@ -28,34 +30,34 @@
     <div id="selectBox">
         <h2>基础设置</h2>
         <label>灰度
-            <input type="range" title="灰度" onchange="changeNum('grey', this)" min="0" max="100" value="0" step="1"/>
+            <input type="range" title="灰度" oninput="changeNum('grey', this)" min="0" max="100" value="0" step="1"/>
         </label>
         <label>模糊
-            <input type="range" title="模糊" onchange="changeNum('blur', this)" min="0" max="5" value="0" step="0.05"/>
+            <input type="range" title="模糊" oninput="changeNum('blur', this)" min="0" max="5" value="0" step="0.05"/>
         </label>
         <label>对比度
-            <input type="range" title="对比度" onchange="changeNum('contrast', this)" min="100" max="1000" value="0"
+            <input type="range" title="对比度" oninput="changeNum('contrast', this)" min="100" max="1000" value="0"
                    step="10"/>
         </label>
         <label>色系反转
-            <input type="range" title="色相反转" onchange="changeNum('hue-rotate', this)" min="0" max="180" value="0"
+            <input type="range" title="色相反转" oninput="changeNum('hue-rotate', this)" min="0" max="180" value="0"
                    step="1"/>
         </label>
         <label>反色
-            <input type="range" title="反色" onchange="changeNum('invert', this)" min="0" max="180" value="0" step="1"/>
+            <input type="range" title="反色" oninput="changeNum('invert', this)" min="0" max="180" value="0" step="1"/>
         </label>
         <label>褐色
-            <input type="range" title="褐色" onchange="changeNum('sepia', this)" min="0" max="180" value="0" step="1"/>
+            <input type="range" title="褐色" oninput="changeNum('sepia', this)" min="0" max="180" value="0" step="1"/>
         </label>
         <label>饱和度
-            <input type="range" title="饱和度" onchange="changeNum('saturate', this)" min="0" max="200" value="0"
+            <input type="range" title="饱和度" oninput="changeNum('saturate', this)" min="0" max="200" value="0"
                    step="2"/>
         </label>
         <label>透明度
-            <input type="range" title="透明度" onchange="changeNum('opacity', this)" min="0" max="100" value="0" step="1"/>
+            <input type="range" title="透明度" oninput="changeNum('opacity', this)" min="0" max="100" value="0" step="1"/>
         </label>
         <label>亮度
-            <input type="range" title="亮度" onchange="changeNum('brightness', this)" min="0" max="200" value="0"
+            <input type="range" title="亮度" oninput="changeNum('brightness', this)" min="0" max="200" value="0"
                    step="2"/>
         </label>
         <h2>其他</h2>

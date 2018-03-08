@@ -1,4 +1,5 @@
 const img_id = 'picture';
+let img_url = [];
 let img = null;
 let canvasImg = document.getElementById('imgCanvas');
 
@@ -53,7 +54,8 @@ function cutImgChange(area) {
         (img.width*area.p/canvasImg.width) >>> 0,
         (img.height*area.q/canvasImg.height) >>> 0,
         0, 0, canvas.width, canvas.height);
-    img.src = canvas.toDataURL(`image/png`, 0.97);
+    delAddArr(img_url, img, canvas.toDataURL(`image/png`, 0.97));
+    img.src = img_url[img_url.length - 1];
 }
 
 
@@ -92,9 +94,11 @@ function getPicture(file) {
                     }
                     content.drawImage(_img, 0, 0, canvasImg.width, canvasImg.height);
                 };
-                _img.src = evt.target.result;
+                delAddArr(img_url, img, evt.target.result);
+                _img.src = img_url[img_url.length - 1];
             } else {
-                img.src = evt.target.result;
+                delAddArr(img_url, img, evt.target.result);
+                img.src = img_url[img_url.length - 1];
             }
         };
         reader.readAsDataURL(file.files[0]);
@@ -135,5 +139,25 @@ function changeNum(type, e) {
 function downloadPicture() {
     if (img) {
         download(canvasImg, img).changeImage.download()
+    }
+}
+
+function delAddArr(arr, item, add) {
+    if (arr.length > 0) {
+        arr.splice(arr.indexOf(item.src) + 1, arr.length - arr.indexOf(item.src) - 1, add)
+    } else {
+        arr.push(add)
+    }
+}
+
+function go(type) {
+    if (type) {
+        if (img_url.indexOf(img.src) > 0) {
+            img.src = img_url[img_url.indexOf(img.src) - 1];
+        }
+    } else {
+        if (img_url.indexOf(img.src) + 1 < img_url.length) {
+            img.src = img_url[img_url.indexOf(img.src) + 1];
+        }
     }
 }
