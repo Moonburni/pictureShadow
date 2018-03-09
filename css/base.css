@@ -31,3 +31,20 @@ input[type="file"] {
 input[type="file"]:hover {
     cursor: pointer;
 }
+input[type="text"] {
+    border: none;
+    border-bottom: #006eb3 solid 1px;
+    color: #233333;
+    height: 30px;
+    outline: none;
+    padding-left: 5px;
+}
+select {
+    border: #006eb3 solid 1px;
+    color: #006eb3;
+    border-radius: 10px;
+    outline: none;
+    height: 25px;
+    padding-left: 5px;
+    margin-top: 5px;
+}

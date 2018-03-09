@@ -1,14 +1,18 @@
 const img_id = 'picture';
 let img_url = [];
 let img = null;
+let fontStyle = {
+    family: 'Microsoft YaHei UI',
+    color: 'black'
+};
 let canvasImg = document.getElementById('imgCanvas');
 
 let cutImg = (function () {
     let imgBox = document.getElementById('imgBox');
     let canvas = null;
-    return (type, obj) => {
+    return (type, obj, style) => {
         if (canvas || !img) return;
-        let create = type === 'cut' ? createCanvas(canvasImg, 'cut') : chartlet(canvasImg, obj, 'cut');
+        let create = type === 'cut' ? createCanvas(canvasImg, 'cut') : chartlet(canvasImg, obj, 'cut', style);
         canvas = create.canvas;
         let confirm = document.createElement('div');
         let cancel = document.createElement('div');
@@ -24,7 +28,7 @@ let cutImg = (function () {
             if (type === 'cut') {
                 cutImgChange(create.cutArea);
             } else {
-                addImgChange(create.obj, canvasImg)
+                addImgChange(create.obj, canvasImg, style)
             }
             imgBox.removeChild(canvas);
             imgBox.removeChild(cutBox);
@@ -40,14 +44,20 @@ let cutImg = (function () {
     }
 })();
 
-function addImgChange(obj, canvas) {
+function addImgChange(obj, canvas, style) {
     let content = canvas.getContext('2d');
     let objArea = obj.objArea;
-    let text = obj.value;
-    content.font = `${objArea.q*1.3}px serif`;
-    content.rotate(objArea.r* Math.PI / 180);
-    content.fillText(text, objArea.x, objArea.y + objArea.q, objArea.p);
-    content.strokeRect(objArea.x, objArea.y, objArea.p, objArea.q);
+    let text = obj.value.text ?  obj.value.text :  obj.value.url;
+    if (obj.value.text) {
+        content.font = `${objArea.q*1.3}px ${style.family}`;
+        content.fillStyle = content.strokeStyle = style.color;
+        content.fillText(text, objArea.x, objArea.y + objArea.q, objArea.p);
+        content.strokeRect(objArea.x, objArea.y, objArea.p, objArea.q);
+    } else {
+        let _img = document.createElement('img');
+        _img.src = obj.value.url;
+        content.drawImage(_img, objArea.x, objArea.y, objArea.p, objArea.q);
+    }
     delAddArr(img_url, img, canvas.toDataURL(`image/png`, 0.97));
     img.src = img_url[img_url.length - 1];
 }
@@ -121,6 +131,16 @@ function getPicture(file) {
     }
 }
 
+function addImg(file) {
+    if (file.files && file.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (evt) {
+            cutImg('map', {url: evt.target.result});
+        };
+        reader.readAsDataURL(file.files[0]);
+    }
+}
+
 function clearNum() {
     [...document.getElementById('selectBox').children]
         .map(label => label.children)
@@ -178,6 +198,33 @@ function go(type) {
     }
 }
 
-function mapImg() {
-    cutImg('map', {text: 'design by moonburn'})
+function mapImg(type) {
+    let temporary = document.getElementById('temporary');
+    let input = document.createElement('input');
+    let div = document.createElement('div');
+    let confirm = document.createElement('div');
+    let cancel = document.createElement('div');
+    let cutBox = document.createElement('div');
+    cutBox.className = 'chooseBox';
+    confirm.innerText = '✔';
+    confirm.className = 'baseBtn';
+    cancel.className = 'baseBtn';
+    cancel.innerText = '✘';
+    cutBox.appendChild(confirm);
+    cutBox.appendChild(cancel);
+    confirm.addEventListener('click',function () {
+        if (input.value) cutImg('map', {text: input.value}, fontStyle);
+        temporary.removeChild(div);
+    });
+    cancel.addEventListener('click',function () {
+        temporary.removeChild(div);
+    });
+    input.type = type;
+    input.placeholder = '请输入想要贴入的文字';
+    div.appendChild(input);
+    div.appendChild(cutBox);
+    temporary.appendChild(div);
+}
+function changeValue(type, event) {
+    fontStyle[type] = event.value;
 }

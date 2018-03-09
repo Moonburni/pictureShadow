@@ -17,11 +17,11 @@
         <div id="btnBox">
             <div class="uploadImg">
                 <input type="file" accept="image/*" onchange="getPicture(this)"/>
-                <div class="uploadBackground">点击上传照片</div>
+                <div class="uploadBackground">上传</div>
             </div>
             <div onclick="go('back')" class="baseBtn">后退</div>
             <div onclick="go()" class="baseBtn">前进</div>
-            <div onclick="downloadPicture()" class="baseBtn">下载图片</div>
+            <div onclick="downloadPicture()" class="baseBtn">下载</div>
         </div>
     </div>
 </div>
@@ -63,7 +63,34 @@
         <h2>其他</h2>
         <div onclick="clearNum()" class="baseBtn">重置</div>
         <div onclick="cutImg('cut')" class="baseBtn">剪裁</div>
-        <div onclick="mapImg()" class="baseBtn">贴图/贴字</div>
+        <div class="uploadImg">
+            <input type="file" accept="image/*" onchange="addImg(this)"/>
+            <div class="uploadBackground">贴图</div>
+        </div>
+        <div onclick="mapImg('text')" class="baseBtn">贴字</div>
+    </div>
+    <div id="temporary"></div>
+</div>
+<div id="box3">
+    <h1>其他设置</h1>
+    <div class="selectBox">
+        <h2>贴字设置</h2>
+        <label>字体
+            <select name="font-family" onchange="changeValue('family', this)">
+                <option value="Microsoft YaHei UI">Microsoft YaHei UI</option>
+                <option value="Microsoft JhengHei Light">Microsoft JhengHei Light</option>
+                <option value="SansSerif">SansSerif</option>
+                <option value="Bahnschrift">Bahnschrift</option>
+            </select>
+        </label>
+        <label>颜色
+            <select name="color" onchange="changeValue('color', this)">
+                <option value="black">黑色</option>
+                <option value="red">红色</option>
+                <option value="grey">灰色</option>
+                <option value="blue">蓝色</option>
+            </select>
+        </label>
     </div>
 </div>
 <script src="js/clipping.js"></script>
