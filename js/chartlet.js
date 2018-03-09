@@ -18,19 +18,28 @@ function chartlet(canvasImg, obj, id, style) {
     let content = canvas.getContext('2d');
     content.save();
 
-    function addText(content, obj, objArea) {
-        content.clearRect(0, 0, canvas.width, canvas.height);
-        if (obj.text) {
-            content.font = `${objArea.q*1.3}px ${style.family}`;
-            content.fillStyle = content.strokeStyle = style.color;
-            content.fillText(obj.text, objArea.x, objArea.y + objArea.q, objArea.p);
-            content.strokeRect(objArea.x, objArea.y, objArea.p, objArea.q);
-        } else {
-            let img = new Image();
-            img.src = obj.url;
-            content.drawImage(img, objArea.x, objArea.y, objArea.p, objArea.q);
+    let addText = (function() {
+        let img = null;
+        return function (content, obj, objArea) {
+            content.clearRect(0, 0, canvas.width, canvas.height);
+            if (obj.text) {
+                content.font = `${objArea.q*1.3}px ${style.family}`;
+                content.fillStyle = content.strokeStyle = style.color;
+                content.fillText(obj.text, objArea.x, objArea.y + objArea.q, objArea.p);
+                content.strokeRect(objArea.x, objArea.y, objArea.p, objArea.q);
+            } else {
+                if (!img) {
+                    img = new Image();
+                    img.onload = function () {
+                        content.drawImage(img, objArea.x, objArea.y, objArea.p, objArea.q);
+                    };
+                    img.src = obj.url;
+                } else {
+                    content.drawImage(img, objArea.x, objArea.y, objArea.p, objArea.q);
+                }
+            }
         }
-    }
+    })();
 
     function judgePosition(x, y, area) {
         return (area.x <= x && x <= area.p + area.x && area.y <= y && y <= area.q + area.y);
