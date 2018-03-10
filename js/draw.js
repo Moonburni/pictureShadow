@@ -50,6 +50,7 @@ function draw() {
             }
         });
         div.appendChild(cutBox);
+        root.innerHTML = '';
         root.appendChild(div);
     }
 

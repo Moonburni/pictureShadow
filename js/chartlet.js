@@ -32,6 +32,7 @@ function mapImg(type) {
     input.placeholder = '请输入想要贴入的文字';
     div.appendChild(input);
     div.appendChild(cutBox);
+    temporary.innerHTML = '';
     temporary.appendChild(div);
 }
 
