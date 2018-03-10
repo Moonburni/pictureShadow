@@ -1,3 +1,40 @@
+let fontStyle = {
+    family: 'Microsoft YaHei UI',
+    color: 'black'
+};
+
+function changeValue(type, event) {
+    fontStyle[type] = event.value;
+}
+
+function mapImg(type) {
+    let temporary = document.getElementById('temporary');
+    let input = document.createElement('input');
+    let div = document.createElement('div');
+    let confirm = document.createElement('div');
+    let cancel = document.createElement('div');
+    let cutBox = document.createElement('div');
+    cutBox.className = 'chooseBox';
+    confirm.innerText = '✔';
+    confirm.className = 'baseBtn';
+    cancel.className = 'baseBtn';
+    cancel.innerText = '✘';
+    cutBox.appendChild(confirm);
+    cutBox.appendChild(cancel);
+    confirm.addEventListener('click',function () {
+        if (input.value) cutImg('map', {text: input.value}, fontStyle);
+        temporary.removeChild(div);
+    });
+    cancel.addEventListener('click',function () {
+        temporary.removeChild(div);
+    });
+    input.type = type;
+    input.placeholder = '请输入想要贴入的文字';
+    div.appendChild(input);
+    div.appendChild(cutBox);
+    temporary.appendChild(div);
+}
+
 function chartlet(canvasImg, obj, id, style) {
     let objArea = {
         x: canvasImg.width * 0.25,

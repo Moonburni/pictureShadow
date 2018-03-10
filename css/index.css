@@ -171,3 +171,7 @@ h2::before {
     display: flex;
     flex-flow: nowrap row;
 }
+.on {
+    background-color: #eeeeee;
+    color: #006eb3;
+}

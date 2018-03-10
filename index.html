@@ -68,6 +68,7 @@
             <div class="uploadBackground">贴图</div>
         </div>
         <div onclick="mapImg('text')" class="baseBtn">贴字</div>
+        <div onclick="drawPicture()" class="baseBtn">绘画</div>
     </div>
     <div id="temporary"></div>
 </div>
@@ -84,11 +85,20 @@
             </select>
         </label>
         <label>颜色
-            <select name="color" onchange="changeValue('color', this)">
-                <option value="black">黑色</option>
-                <option value="red">红色</option>
-                <option value="grey">灰色</option>
-                <option value="blue">蓝色</option>
+           <input type="color" onchange="changeValue('color', this)"/>
+        </label>
+        <h2>绘图设置</h2>
+        <label>颜色
+            <input type="color" onchange="drawChangeValue('color', this)"/>
+        </label>
+        <label>尺寸
+            <input type="range" title="尺寸" onchange="drawChangeValue('size', this)" min="5" max="50" value="5"
+                   step="0.5"/>
+        </label>
+        <label>填充
+            <select name="fill" onchange="drawChangeValue('fill', this)">
+                <option value=1>是</option>
+                <option value=0>否</option>
             </select>
         </label>
     </div>
@@ -96,6 +106,7 @@
 <script src="js/clipping.js"></script>
 <script src="js/download.js"></script>
 <script src="js/chartlet.js"></script>
+<script src="js/draw.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>
