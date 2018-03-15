@@ -193,3 +193,17 @@ function go(type) {
         }
     }
 }
+
+
+
+function edge() {
+    let canvas = document.createElement('canvas');
+    canvas.width = canvasImg.width;
+    canvas.height = canvasImg.height;
+    let content = canvas.getContext('2d');
+    let data = getEdge(canvasImg, 15);
+    // combo(data.edge, data.width, data.imageData.data);
+    content.putImageData(data.imageData, 0, 0);
+    delAddArr(img_url, img, canvas.toDataURL(`image/png`, 0.97));
+    img.src = img_url[img_url.length - 1];
+}
